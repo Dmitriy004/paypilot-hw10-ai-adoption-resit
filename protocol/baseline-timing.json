@@ -1,19 +1,55 @@
 {
   "experiment": "HW10 resit after mentor feedback of 2026-11-23",
-  "status": "not_started",
+  "status": "initial_attempt_finished_needs_author_correction",
   "timezone": "Europe/Warsaw",
   "baseline_file": "tests/manual/test_fx_manual.py",
-  "start_utc": null,
-  "start_local": null,
-  "end_utc": null,
-  "end_local": null,
-  "elapsed_seconds": null,
-  "elapsed_minutes": null,
-  "events": [],
+  "start_utc": "2026-11-23T21:05:35Z",
+  "start_local": "2026-11-23T22:05:35+01:00",
+  "end_utc": "2026-11-23T21:26:20Z",
+  "end_local": "2026-11-23T22:26:20+01:00",
+  "elapsed_seconds": 1245,
+  "elapsed_minutes": 20.75,
+  "events": [
+    {
+      "event": "author_explicit_start",
+      "message": "начинаю baseline",
+      "observed_utc": "2026-11-23T21:05:35Z",
+      "observed_local": "2026-11-23T22:05:35+01:00",
+      "clock_source": "clock.curr_time on receipt, before writing this record",
+      "scope": "wall elapsed time until author finish report; includes communication latency, not active-only telemetry"
+    },
+    {
+      "event": "author_initial_attempt_finish",
+      "message": "готово",
+      "observed_utc": "2026-11-23T21:26:20Z",
+      "observed_local": "2026-11-23T22:26:20+01:00",
+      "clock_source": "clock.curr_time on receipt, before reading or executing the tests",
+      "result": "6 cases collected; 3 passed and 3 failed on the original module; author correction required before baseline freeze"
+    }
+  ],
   "pauses": [],
   "author_confirmed_no_pauses": null,
   "baseline_commit": null,
-  "authoring_method": "pending actual independent author input; assistant only prepares the environment",
+  "baseline_frozen": false,
+  "initial_attempt_verification": {
+    "command": ".venv/Scripts/python.exe -m pytest tests/manual -q -p no:cacheprovider",
+    "exit_code": 1,
+    "functions": 6,
+    "cases": 6,
+    "passed": 3,
+    "failed": 3,
+    "file_sha256": "1e7648cf14b895849d9a3515748ac72e5dee3ddb3e624ef1cdca27fd7608c009",
+    "assistant_changed_test_implementation": false,
+    "timing_scope": "1245 seconds is the initial attempt wall interval only; no pauses have been reported, but no-pause confirmation is still pending; subsequent author correction time must be recorded separately"
+  },
+  "initial_read_only_check": {
+    "scope": "first check after recording the explicit start; not an exact-instant snapshot of the start clock reading",
+    "test_function_declarations": 0,
+    "file_sha256": "d4ed890eb8642f5e3096e45708d6f03688f4cf481944fb5f839a24f03ceacb3d",
+    "git_reported_manual_modified": true,
+    "assistant_changed_test_implementation": false
+  },
+  "authoring_method": "author now writes baseline independently; assistant records timing without supplying test implementations or cases",
   "prior_exposure_to_old_experiment": true,
   "old_code_or_timing_reused": false,
   "generated_calls_in_this_resit": 0
