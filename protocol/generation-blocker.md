@@ -9,3 +9,7 @@ A proposed read-only check of keys from multiple neighboring .env files was reje
 Ruling: the later explicit user instruction chooses OpenAI despite the mentor's literal claude -p request. Keep provider-deviation.md and the final declaration explicit; this does not resolve the mentor requirement. Cost if wrong: the mentor may require another protocol-compliant run. Do not hide the deviation or claim acceptance.
 
 Next generation requires the user's key update and retry authorization. Preserve the first attempt files; any authorized retry must use distinct evidence paths and cannot overwrite this failure, the prior forecast, or a generated suite. Author review time has not started. No mutation execution, score, coverage comparison, adoption conclusion or submission is claimed at this checkpoint.
+
+## Subsequent user authorization
+
+The user explicitly authorized one retry after fixing the key, up to USD0.05. The user then reported replacing the key specifically in `C:/Users/Admin/PycharmProjects/paypilot-stand-shared/.env` and directed its use. Only this designated source is allowed; the previously rejected multi-source probing remains prohibited. `--retry-auth-once` retains the initial files and writes separate `generation-retry-*` evidence. No generated comparator exists yet at this amendment; authorization alone is not a successful generation.

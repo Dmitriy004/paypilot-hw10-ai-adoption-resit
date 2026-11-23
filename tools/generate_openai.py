@@ -34,6 +34,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--run", action="store_true")
     ap.add_argument("--env-file", type=Path)
+    ap.add_argument("--retry-auth-once", action="store_true",
+                    help="Separately authorized retry after the preserved HTTP401; distinct evidence paths.")
     args = ap.parse_args()
     source = ROOT / "app/engines/fx.py"
     prompt = ROOT / "prompts/generation-prompt.md"
@@ -67,6 +69,7 @@ def main():
         "payload_sha256": hashlib.sha256(body).hexdigest(),
         "context_files": ["prompts/generation-prompt.md", "app/engines/fx.py"],
         "filesystem_tools": [], "retries": 0,
+        "authorized_auth_retry": args.retry_auth_once,
         "mentor_requested_claude": True, "literal_claude_compliance": False,
     }
     if not args.run:
@@ -80,6 +83,13 @@ def main():
     target = ROOT / "tests/generated/test_fx_generated.py"
     assert not target.exists(), "never overwrite a generated comparator"
     reports = ROOT / "reports"
+    prefix = "generation-retry" if args.retry_auth_once else "generation"
+    if args.retry_auth_once:
+        prior = json.loads((reports / "generation-failure.json").read_text(encoding="utf-8"))
+        assert prior.get("http_status") == 401, "retry requires preserved initial HTTP401"
+        assert (reports / "generation-attempt.json").exists()
+        meta["prior_auth_failure"] = "reports/generation-failure.json"
+        meta["authorization_source"] = "user explicitly permitted one retry up to USD0.05 and designated updated paypilot-stand-shared/.env"
     key = os.environ.get("OPENAI_API_KEY", "")
     if not key and args.env_file:
         for line in args.env_file.read_text(encoding="utf-8-sig").splitlines():
@@ -88,14 +98,14 @@ def main():
                 key = value.strip().strip('"').strip("'")
                 break
     assert key, "OPENAI_API_KEY not configured; nothing sent"
-    dump(reports / "generation-request.json", payload)
+    dump(reports / (prefix + "-request.json"), payload)
     started = dt.datetime.now(dt.timezone.utc).isoformat()
     meta["started_utc"] = started
     meta["pre_generation_head"] = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
     # Exclusive attempt marker prevents rerunning after failure or timeout.
-    dump(reports / "generation-attempt.json", meta)
+    dump(reports / (prefix + "-attempt.json"), meta)
     request = urllib.request.Request(
         "https://api.openai.com/v1/responses", data=body,
         headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"},
@@ -108,7 +118,7 @@ def main():
             request_id = response.headers.get("x-request-id")
     except Exception as exc:
         # No error body/key/header dump and no retry.
-        dump(reports / "generation-failure.json", {
+        dump(reports / (prefix + "-failure.json"), {
             "error_type": type(exc).__name__,
             "http_status": getattr(exc, "code", None),
             "elapsed_seconds": time.perf_counter() - tick,
@@ -116,7 +126,8 @@ def main():
         })
         raise SystemExit("Generation failed; attempt retained, no automatic retry.") from None
     elapsed = time.perf_counter() - tick
-    (reports / "generation-response.json").write_bytes(raw)
+    with (reports / (prefix + "-response.json")).open("xb") as fh:
+        fh.write(raw)
     data = json.loads(raw)
     usage = data.get("usage") or {}
     cached = (usage.get("input_tokens_details") or {}).get("cached_tokens", 0)
