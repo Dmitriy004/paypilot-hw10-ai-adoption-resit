@@ -1,0 +1,98 @@
+# New resit list: fixed before generation or mutation execution.
+# Each transformation is applied only in the course runner's temporary copy.
+
+[[mutant]]
+id = "A-01"
+class = "значення тіру"
+file = "app/engines/policy.py"
+find = '"tier2": 0.9'
+replace = '"tier2": 1.5'
+description = "Спред tier2 підмінено з 0.9% на 1.5% (наслідок D20)."
+
+[[mutant]]
+id = "A-02"
+class = "значення тіру"
+file = "app/engines/policy.py"
+find = '"tier1": 1.5'
+replace = '"tier1": 1.0'
+description = "Стандартний спред tier1 занижено з 1.5% до 1.0%."
+
+[[mutant]]
+id = "A-03"
+class = "значення тіру"
+file = "app/engines/policy.py"
+find = '"tier3": 0.5'
+replace = '"tier3": 0.9'
+description = "Стандартний спред tier3 підвищено з 0.5% до 0.9%."
+
+[[mutant]]
+id = "B-01"
+class = "межа EUR 1 000"
+file = "app/engines/fx.py"
+find = 'within = allowance_used_eur + amount_eur <= allowance_total'
+replace = 'within = allowance_used_eur + amount_eur < allowance_total'
+description = "Точну межу безкоштовного ліміту помилково зроблено платною."
+
+[[mutant]]
+id = "B-02"
+class = "межа EUR 1 000"
+file = "app/engines/policy.py"
+find = '"tier2": 1000'
+replace = '"tier2": 999'
+description = "Межу tier2 знижено до EUR999: рівно EUR1000 більше не безкоштовно."
+
+[[mutant]]
+id = "B-03"
+class = "межа EUR 1 000"
+file = "app/engines/policy.py"
+find = '"tier2": 1000'
+replace = '"tier2": 1001'
+description = "Межу tier2 підвищено до EUR1001: понад EUR1000 зайво надається пільга."
+
+[[mutant]]
+id = "C-01"
+class = "арифметика"
+file = "app/engines/fx.py"
+find = 'return policy.RATES_TO_EUR[from_currency] / policy.RATES_TO_EUR[to_currency]'
+replace = 'return policy.RATES_TO_EUR[from_currency] * policy.RATES_TO_EUR[to_currency]'
+description = "Крос-курс отримують множенням замість ділення."
+
+[[mutant]]
+id = "C-02"
+class = "арифметика"
+file = "app/engines/fx.py"
+find = 'gross = amount * rate'
+replace = 'gross = amount / rate'
+description = "Суму конвертації ділять на курс замість множення."
+
+[[mutant]]
+id = "C-03"
+class = "арифметика"
+file = "app/engines/fx.py"
+find = 'final_amount=gross - spread_amount)'
+replace = 'final_amount=gross + spread_amount)'
+description = "Комісію додають до виплати клієнтові замість віднімання."
+
+[[mutant]]
+id = "D-01"
+class = "форма результату"
+file = "app/engines/fx.py"
+find = 'for k, v in asdict(self).items()}'
+replace = 'for k, v in asdict(self).items() if k != "final_amount"}'
+description = "Серіалізований результат не містить обов'язкового final_amount."
+
+[[mutant]]
+id = "D-02"
+class = "форма результату"
+file = "app/engines/fx.py"
+find = 'allowance_applied=within,'
+replace = 'allowance_applied=not within,'
+description = "Прапорець застосування безкоштовного ліміту інвертовано."
+
+[[mutant]]
+id = "D-03"
+class = "форма результату"
+file = "app/engines/fx.py"
+find = 'mid_rate=rate, tier=tier, spread_pct=spread_pct,'
+replace = 'mid_rate=rate, tier="tier1", spread_pct=spread_pct,'
+description = "Метадані результату завжди називають tier1 замість запитаного тіру."
