@@ -1,0 +1,633 @@
+{
+  "kind": "supplemental_reused_historical_control_not_primary_resit",
+  "source_commit": "f46effa389dbe4b6a894dd0108884d36336edcf5",
+  "previous_source_commit": "05d773e70f9439e6ffbb18cade0e935cf294741c",
+  "previous_source_file": "tests/generated/test_fx_generated.py",
+  "previous_generated_sha256": "72f79054746be5461d69ab11c82f32bc6f4e7a5fa96dac3d859ca5384bd3c0c7",
+  "replaced_only_in_temporary_clone": true,
+  "temporary_clone": "C:\\Users\\Admin\\AppData\\Local\\Temp\\paypilot-resit-historical-control-gnn_486v\\kit",
+  "started_utc": "2026-11-23T21:52:13.516428+00:00",
+  "runs": [
+    {
+      "command": [
+        "-m",
+        "pytest",
+        "tests/generated",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "exit_code": 0,
+      "stdout": "..........                                                               [100%]\n10 passed in 0.06s\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-m",
+        "pytest",
+        "tests/manual",
+        "tests/generated",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "exit_code": 0,
+      "stdout": "................                                                         [100%]\n16 passed in 0.06s\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-m",
+        "pytest",
+        "tests/generated",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--cov=app.engines.fx",
+        "--cov-report=json:reports/previous-control-coverage.json"
+      ],
+      "exit_code": 0,
+      "stdout": "..........                                                               [100%]\n=============================== tests coverage ================================\n______________ coverage: platform win32, python 3.12.14-final-0 _______________\n\nCoverage JSON written to file reports/previous-control-coverage.json\n10 passed in 0.13s\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "tools/run_mutants.py",
+        "--set",
+        "generated"
+      ],
+      "exit_code": 0,
+      "stdout": "Набір: generated (tests/generated)\nСписок: mutants.toml, мутантів: 12\nСписок закомічено: 2026-11-23T22:37:24+01:00 (717e692)\nОригінальний модуль: набір зелений.\n\n  A-01   ВИЖИВ  [значення тіру] Спред tier2 підмінено з 0.9% на 1.5% (наслідок D20).\n  A-02   ВИЖИВ  [значення тіру] Стандартний спред tier1 занижено з 1.5% до 1.0%.\n  A-03   ВИЖИВ  [значення тіру] Стандартний спред tier3 підвищено з 0.5% до 0.9%.\n  B-01   вбито  [межа EUR 1 000] Точну межу безкоштовного ліміту помилково зроблено платною.\n  B-02   ВИЖИВ  [межа EUR 1 000] Межу tier2 знижено до EUR999: рівно EUR1000 більше не безкоштовно.\n  B-03   ВИЖИВ  [межа EUR 1 000] Межу tier2 підвищено до EUR1001: понад EUR1000 зайво надається пільга.\n  C-01   вбито  [арифметика] Крос-курс отримують множенням замість ділення.\n  C-02   ВИЖИВ  [арифметика] Суму конвертації ділять на курс замість множення.\n  C-03   ВИЖИВ  [арифметика] Комісію додають до виплати клієнтові замість віднімання.\n  D-01   ВИЖИВ  [форма результату] Серіалізований результат не містить обов'язкового final_amount.\n  D-02   вбито  [форма результату] Прапорець застосування безкоштовного ліміту інвертовано.\n  D-03   ВИЖИВ  [форма результату] Метадані результату завжди називають tier1 замість запитаного тіру.\n\nклас мутанта             | вбито\n-------------------------+-------\nзначення тіру            | 0/3\nмежа EUR 1 000           | 1/3\nарифметика               | 1/3\nформа результату         | 1/3\n-------------------------+-------\nразом                    | 3/12\nmutation score           | 25%\n\nВцілілі: A-01, A-02, A-03, B-02, B-03, C-02, C-03, D-01, D-03\nЗвіт: reports\\mutants-generated-20261123-215217Z.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "tools/run_mutants.py",
+        "--set",
+        "all"
+      ],
+      "exit_code": 0,
+      "stdout": "Набір: all (tests/manual, tests/generated)\nСписок: mutants.toml, мутантів: 12\nСписок закомічено: 2026-11-23T22:37:24+01:00 (717e692)\nОригінальний модуль: набір зелений.\n\n  A-01   ВИЖИВ  [значення тіру] Спред tier2 підмінено з 0.9% на 1.5% (наслідок D20).\n  A-02   ВИЖИВ  [значення тіру] Стандартний спред tier1 занижено з 1.5% до 1.0%.\n  A-03   ВИЖИВ  [значення тіру] Стандартний спред tier3 підвищено з 0.5% до 0.9%.\n  B-01   вбито  [межа EUR 1 000] Точну межу безкоштовного ліміту помилково зроблено платною.\n  B-02   ВИЖИВ  [межа EUR 1 000] Межу tier2 знижено до EUR999: рівно EUR1000 більше не безкоштовно.\n  B-03   ВИЖИВ  [межа EUR 1 000] Межу tier2 підвищено до EUR1001: понад EUR1000 зайво надається пільга.\n  C-01   вбито  [арифметика] Крос-курс отримують множенням замість ділення.\n  C-02   вбито  [арифметика] Суму конвертації ділять на курс замість множення.\n  C-03   ВИЖИВ  [арифметика] Комісію додають до виплати клієнтові замість віднімання.\n  D-01   ВИЖИВ  [форма результату] Серіалізований результат не містить обов'язкового final_amount.\n  D-02   вбито  [форма результату] Прапорець застосування безкоштовного ліміту інвертовано.\n  D-03   ВИЖИВ  [форма результату] Метадані результату завжди називають tier1 замість запитаного тіру.\n\nклас мутанта             | вбито\n-------------------------+-------\nзначення тіру            | 0/3\nмежа EUR 1 000           | 1/3\nарифметика               | 2/3\nформа результату         | 1/3\n-------------------------+-------\nразом                    | 4/12\nmutation score           | 33%\n\nВцілілі: A-01, A-02, A-03, B-02, B-03, C-03, D-01, D-03\nЗвіт: reports\\mutants-all-20261123-215228Z.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "-m",
+        "pytest",
+        "tests/manual",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "exit_code": 1,
+      "stdout": ".....F                                                                   [100%]\n================================== FAILURES ===================================\n_________________________ test_quote_negative_amount __________________________\n\n    def test_quote_negative_amount():\n        result = quote(\n            amount=-100,\n            from_currency=\"EUR\",\n            to_currency=\"USD\",\n            tier=\"tier1\",\n        )\n    \n        assert result.amount == -100\n>       assert result.gross_amount == pytest.approx(\n            -100 * result.mid_rate\n        )\nE       assert -92.0 == -108.69565217391303 � 1.1e-04\nE         \nE         comparison failed\nE         Obtained: -92.0\nE         Expected: -108.69565217391303 � 1.1e-04\n\ntests\\manual\\test_fx_manual.py:62: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/manual/test_fx_manual.py::test_quote_negative_amount - assert -9...\n1 failed, 5 passed in 0.10s\n",
+      "stderr": ""
+    }
+  ],
+  "mutation_reports": {
+    "generated": {
+      "set": "generated",
+      "paths": [
+        "tests/generated"
+      ],
+      "started_at": "2026-11-23T22:52:17.005690+01:00",
+      "mutants_file": "mutants.toml",
+      "mutants_git": {
+        "committed_at": "2026-11-23T22:37:24+01:00",
+        "commit": "717e692",
+        "uncommitted": false,
+        "head": "f46effa"
+      },
+      "killed": 3,
+      "total": 12,
+      "mutation_score": 0.25,
+      "by_class": {
+        "значення тіру": {
+          "total": 3,
+          "killed": 0
+        },
+        "межа EUR 1 000": {
+          "total": 3,
+          "killed": 1
+        },
+        "арифметика": {
+          "total": 3,
+          "killed": 1
+        },
+        "форма результату": {
+          "total": 3,
+          "killed": 1
+        }
+      },
+      "survived": [
+        "A-01",
+        "A-02",
+        "A-03",
+        "B-02",
+        "B-03",
+        "C-02",
+        "C-03",
+        "D-01",
+        "D-03"
+      ],
+      "rows": [
+        {
+          "id": "A-01",
+          "class": "значення тіру",
+          "description": "Спред tier2 підмінено з 0.9% на 1.5% (наслідок D20).",
+          "killed": false
+        },
+        {
+          "id": "A-02",
+          "class": "значення тіру",
+          "description": "Стандартний спред tier1 занижено з 1.5% до 1.0%.",
+          "killed": false
+        },
+        {
+          "id": "A-03",
+          "class": "значення тіру",
+          "description": "Стандартний спред tier3 підвищено з 0.5% до 0.9%.",
+          "killed": false
+        },
+        {
+          "id": "B-01",
+          "class": "межа EUR 1 000",
+          "description": "Точну межу безкоштовного ліміту помилково зроблено платною.",
+          "killed": true
+        },
+        {
+          "id": "B-02",
+          "class": "межа EUR 1 000",
+          "description": "Межу tier2 знижено до EUR999: рівно EUR1000 більше не безкоштовно.",
+          "killed": false
+        },
+        {
+          "id": "B-03",
+          "class": "межа EUR 1 000",
+          "description": "Межу tier2 підвищено до EUR1001: понад EUR1000 зайво надається пільга.",
+          "killed": false
+        },
+        {
+          "id": "C-01",
+          "class": "арифметика",
+          "description": "Крос-курс отримують множенням замість ділення.",
+          "killed": true
+        },
+        {
+          "id": "C-02",
+          "class": "арифметика",
+          "description": "Суму конвертації ділять на курс замість множення.",
+          "killed": false
+        },
+        {
+          "id": "C-03",
+          "class": "арифметика",
+          "description": "Комісію додають до виплати клієнтові замість віднімання.",
+          "killed": false
+        },
+        {
+          "id": "D-01",
+          "class": "форма результату",
+          "description": "Серіалізований результат не містить обов'язкового final_amount.",
+          "killed": false
+        },
+        {
+          "id": "D-02",
+          "class": "форма результату",
+          "description": "Прапорець застосування безкоштовного ліміту інвертовано.",
+          "killed": true
+        },
+        {
+          "id": "D-03",
+          "class": "форма результату",
+          "description": "Метадані результату завжди називають tier1 замість запитаного тіру.",
+          "killed": false
+        }
+      ]
+    },
+    "all": {
+      "set": "all",
+      "paths": [
+        "tests/manual",
+        "tests/generated"
+      ],
+      "started_at": "2026-11-23T22:52:28.813653+01:00",
+      "mutants_file": "mutants.toml",
+      "mutants_git": {
+        "committed_at": "2026-11-23T22:37:24+01:00",
+        "commit": "717e692",
+        "uncommitted": false,
+        "head": "f46effa"
+      },
+      "killed": 4,
+      "total": 12,
+      "mutation_score": 0.3333,
+      "by_class": {
+        "значення тіру": {
+          "total": 3,
+          "killed": 0
+        },
+        "межа EUR 1 000": {
+          "total": 3,
+          "killed": 1
+        },
+        "арифметика": {
+          "total": 3,
+          "killed": 2
+        },
+        "форма результату": {
+          "total": 3,
+          "killed": 1
+        }
+      },
+      "survived": [
+        "A-01",
+        "A-02",
+        "A-03",
+        "B-02",
+        "B-03",
+        "C-03",
+        "D-01",
+        "D-03"
+      ],
+      "rows": [
+        {
+          "id": "A-01",
+          "class": "значення тіру",
+          "description": "Спред tier2 підмінено з 0.9% на 1.5% (наслідок D20).",
+          "killed": false
+        },
+        {
+          "id": "A-02",
+          "class": "значення тіру",
+          "description": "Стандартний спред tier1 занижено з 1.5% до 1.0%.",
+          "killed": false
+        },
+        {
+          "id": "A-03",
+          "class": "значення тіру",
+          "description": "Стандартний спред tier3 підвищено з 0.5% до 0.9%.",
+          "killed": false
+        },
+        {
+          "id": "B-01",
+          "class": "межа EUR 1 000",
+          "description": "Точну межу безкоштовного ліміту помилково зроблено платною.",
+          "killed": true
+        },
+        {
+          "id": "B-02",
+          "class": "межа EUR 1 000",
+          "description": "Межу tier2 знижено до EUR999: рівно EUR1000 більше не безкоштовно.",
+          "killed": false
+        },
+        {
+          "id": "B-03",
+          "class": "межа EUR 1 000",
+          "description": "Межу tier2 підвищено до EUR1001: понад EUR1000 зайво надається пільга.",
+          "killed": false
+        },
+        {
+          "id": "C-01",
+          "class": "арифметика",
+          "description": "Крос-курс отримують множенням замість ділення.",
+          "killed": true
+        },
+        {
+          "id": "C-02",
+          "class": "арифметика",
+          "description": "Суму конвертації ділять на курс замість множення.",
+          "killed": true
+        },
+        {
+          "id": "C-03",
+          "class": "арифметика",
+          "description": "Комісію додають до виплати клієнтові замість віднімання.",
+          "killed": false
+        },
+        {
+          "id": "D-01",
+          "class": "форма результату",
+          "description": "Серіалізований результат не містить обов'язкового final_amount.",
+          "killed": false
+        },
+        {
+          "id": "D-02",
+          "class": "форма результату",
+          "description": "Прапорець застосування безкоштовного ліміту інвертовано.",
+          "killed": true
+        },
+        {
+          "id": "D-03",
+          "class": "форма результату",
+          "description": "Метадані результату завжди називають tier1 замість запитаного тіру.",
+          "killed": false
+        }
+      ]
+    }
+  },
+  "previous_generated_coverage": {
+    "meta": {
+      "format": 3,
+      "version": "7.17.5",
+      "timestamp": "2026-11-23T22:52:16.243587",
+      "branch_coverage": false,
+      "show_contexts": false
+    },
+    "files": {
+      "app\\engines\\fx.py": {
+        "executed_lines": [
+          2,
+          4,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          22,
+          23,
+          27,
+          28,
+          29,
+          30,
+          31,
+          34,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          55,
+          56,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71
+        ],
+        "summary": {
+          "covered_lines": 45,
+          "num_statements": 45,
+          "percent_covered": 100.0,
+          "percent_covered_display": "100",
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "percent_statements_covered": 100.0,
+          "percent_statements_covered_display": "100"
+        },
+        "missing_lines": [],
+        "excluded_lines": [],
+        "functions": {
+          "FxQuote.as_dict": {
+            "executed_lines": [
+              23
+            ],
+            "summary": {
+              "covered_lines": 1,
+              "num_statements": 1,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 22
+          },
+          "mid_rate": {
+            "executed_lines": [
+              28,
+              29,
+              30,
+              31
+            ],
+            "summary": {
+              "covered_lines": 4,
+              "num_statements": 4,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 27
+          },
+          "quote": {
+            "executed_lines": [
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              55,
+              56
+            ],
+            "summary": {
+              "covered_lines": 15,
+              "num_statements": 15,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 34
+          },
+          "transfer_fee": {
+            "executed_lines": [
+              67,
+              68,
+              69,
+              70,
+              71
+            ],
+            "summary": {
+              "covered_lines": 5,
+              "num_statements": 5,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 66
+          },
+          "": {
+            "executed_lines": [
+              2,
+              4,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              22,
+              27,
+              34,
+              66
+            ],
+            "summary": {
+              "covered_lines": 20,
+              "num_statements": 20,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 1
+          }
+        },
+        "classes": {
+          "FxQuote": {
+            "executed_lines": [
+              23
+            ],
+            "summary": {
+              "covered_lines": 1,
+              "num_statements": 1,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 8
+          },
+          "": {
+            "executed_lines": [
+              2,
+              4,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              22,
+              27,
+              28,
+              29,
+              30,
+              31,
+              34,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              55,
+              56,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71
+            ],
+            "summary": {
+              "covered_lines": 44,
+              "num_statements": 44,
+              "percent_covered": 100.0,
+              "percent_covered_display": "100",
+              "missing_lines": 0,
+              "excluded_lines": 0,
+              "percent_statements_covered": 100.0,
+              "percent_statements_covered_display": "100"
+            },
+            "missing_lines": [],
+            "excluded_lines": [],
+            "start_line": 1
+          }
+        }
+      }
+    },
+    "totals": {
+      "covered_lines": 45,
+      "num_statements": 45,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100"
+    }
+  },
+  "primary_manual_c02_assertion_audit": {
+    "exit_code": 1,
+    "assertion_failure_present": true,
+    "target_mutant": "C-02"
+  },
+  "temp_clone_status": " M tests/generated/test_fx_generated.py\n?? reports/mutants-all-20261123-215228Z.json\n?? reports/mutants-generated-20261123-215217Z.json\n?? reports/previous-control-coverage.json\n",
+  "finished_utc": "2026-11-23T21:52:39.595083+00:00",
+  "manual_canonical_sha256": "14bd8d9f8bd83ec12d62bc78136295ae3e6a240c69978f3826fca10e1911e699",
+  "new_raw_canonical_sha256": "b38470cfc53e78a607284ff7e4a0bae78f331d6da8e352b1340594bc9c77be31"
+}

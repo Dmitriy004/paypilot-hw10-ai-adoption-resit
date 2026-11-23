@@ -1,0 +1,9 @@
+# Результат історичного контролю — не заміна нової генерації
+
+За прямим проханням користувача використано старий generated з **05d773e70f9439e6ffbb18cade0e935cf294741c** старого paypilot-hw10-ai-adoption лише у тимчасовому локальному clone поточного resit. Прогноз **f46effa389dbe4b6a894dd0108884d36336edcf5** закомічено до цих контрольних прогонів. Canonicalнабори resit і старий репозиторій не змінені. Повний контроль з sourceSHA, hashes, командами, виходами й відносними результатами — [reports/previous-generated-control.json](../reports/previous-generated-control.json).
+
+На оригіналі previous-generated10/10PASS; currentmanual+previous-generated16/16PASS. На тих самих12мутантах: previous-generated **3/12** (B-01,C-01,D-02), union **4/12** (B-01,C-01,C-02,D-02). За класами: generated0/3,1/3,1/3,1/3; union0/3,1/3,2/3,1/3. Вцілілі union:A-01,A-02,A-03,B-02,B-03,C-03,D-01,D-03. Обидва точні прогнози контрольного запуску справдилися. Ці числа виміряно заново на новому списку, а не скопійовано зі старого звіту.
+
+Окремий C-02audit у тимчасовому кіті підтвердив manualfailure саме AssertionError у test_quote_negative_amount, а не import/fixtureerror; оригінальний файл після аудиту відновлений. Тимчасовий clone мав навмисно замінений generated, тому це **не** cleancloneготовності основного resit. `uncommitted:false` у вкладених mutationreports стосується тільки mutants.toml, не всього клона.
+
+Ні цей контроль, ні його витрати не видаються за нову генерацію або самостійне людське рев'ю. Це повторне використання старого OpenAI-набору, не mentorprovidedfallback. Нова генерація b69af5e лишається originalred10/10 у основному tests/generated; її scoreN/A. Немає відповідності claude -p, готового авторського review або валідного основного greenclone. Контроль не дозволяє оголосити пересдачу завершеною.
