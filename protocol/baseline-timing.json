@@ -1,6 +1,6 @@
 {
   "experiment": "HW10 resit after mentor feedback of 2026-11-23",
-  "status": "initial_attempt_finished_needs_author_correction",
+  "status": "original_green_source_checkpoint_correction_timing_pending",
   "timezone": "Europe/Warsaw",
   "baseline_file": "tests/manual/test_fx_manual.py",
   "start_utc": "2026-11-23T21:05:35Z",
@@ -32,6 +32,22 @@
   "no_pauses_confirmation_source": "author explicitly replied Без перерывов about 2026-11-23 22:05:35–22:26:20 Europe/Warsaw",
   "baseline_commit": null,
   "baseline_frozen": false,
+  "correction_finish_utc": "2026-11-23T21:31:33Z",
+  "correction_finish_local": "2026-11-23T22:31:33+01:00",
+  "correction_finish_message": "я починил",
+  "correction_start_utc": null,
+  "correction_elapsed_seconds": null,
+  "correction_timing_status": "author clarification pending; do not infer start or duration from git, first attempt finish, or messages",
+  "corrected_verification": {
+    "command": ".venv/Scripts/python.exe -m pytest tests/manual -q -p no:cacheprovider",
+    "exit_code": 0,
+    "functions": 6,
+    "cases": 6,
+    "passed": 6,
+    "failed": 0,
+    "file_sha256": "14bd8d9f8bd83ec12d62bc78136295ae3e6a240c69978f3826fca10e1911e699",
+    "assistant_changed_test_implementation": false
+  },
   "initial_attempt_verification": {
     "command": ".venv/Scripts/python.exe -m pytest tests/manual -q -p no:cacheprovider",
     "exit_code": 1,

@@ -28,9 +28,13 @@ def test_quote_returns_expected_fields():
         tier="tier1",
     )
 
-    assert "rate" in result
-    assert "converted_amount" in result
-    assert "fee" in result
+    assert result.from_currency == "EUR"
+    assert result.to_currency == "USD"
+    assert result.amount == 100
+    assert result.mid_rate > 0
+    assert result.final_amount == pytest.approx(
+        result.gross_amount - result.spread_amount
+    )
 
 
 def test_quote_zero_amount():
@@ -41,14 +45,23 @@ def test_quote_zero_amount():
         tier="tier1",
     )
 
-    assert result["converted_amount"] == 0
+    assert result.gross_amount == 0
+    assert result.spread_amount == 0
+    assert result.final_amount == 0
 
 
 def test_quote_negative_amount():
-    with pytest.raises(ValueError):
-        quote(
-            amount=-100,
-            from_currency="EUR",
-            to_currency="USD",
-            tier="tier1",
-        )
+    result = quote(
+        amount=-100,
+        from_currency="EUR",
+        to_currency="USD",
+        tier="tier1",
+    )
+
+    assert result.amount == -100
+    assert result.gross_amount == pytest.approx(
+        -100 * result.mid_rate
+    )
+    assert result.final_amount == pytest.approx(
+        result.gross_amount - result.spread_amount
+    )
