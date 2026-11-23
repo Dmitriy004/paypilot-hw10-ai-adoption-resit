@@ -1,0 +1,29 @@
+{
+  "provider": "openai",
+  "model": "gpt-4.1-mini-2025-04-14",
+  "payload_bytes": 3467,
+  "max_output_tokens": 6500,
+  "authorized_cap_usd": 0.05,
+  "pessimistic_estimate_ceiling_usd": 0.012606,
+  "prices_usd_per_million": {
+    "input": 0.4,
+    "cached_input": 0.1,
+    "output": 1.6
+  },
+  "price_source": "https://developers.openai.com/api/docs/pricing",
+  "price_verified_date": "2026-11-23",
+  "manual_sha256": "14bd8d9f8bd83ec12d62bc78136295ae3e6a240c69978f3826fca10e1911e699",
+  "source_sha256": "b0a2262dc6b3da959bb9b87cdd9ee3a2f77447b6d4eb04ba78dd206cd88e51b2",
+  "prompt_sha256": "c7092077d5b19799734408a48cceef060239e8b3a793e6440f9fbb32773fe166",
+  "payload_sha256": "20c3d1f99c499f35bd3eeb920e561b26c3fe0d3f3317dafde634e5df0f82e902",
+  "context_files": [
+    "prompts/generation-prompt.md",
+    "app/engines/fx.py"
+  ],
+  "filesystem_tools": [],
+  "retries": 0,
+  "mentor_requested_claude": true,
+  "literal_claude_compliance": false,
+  "started_utc": "2026-11-23T21:41:14.106347+00:00",
+  "pre_generation_head": "97dafba8b8bfe37f0415e2267e3b321d8c1a8230"
+}

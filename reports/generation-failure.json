@@ -1,0 +1,6 @@
+{
+  "error_type": "HTTPError",
+  "http_status": 401,
+  "elapsed_seconds": 0.5903131999075413,
+  "automatic_retry": false
+}
