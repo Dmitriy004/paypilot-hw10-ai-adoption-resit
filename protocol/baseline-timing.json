@@ -28,7 +28,8 @@
     }
   ],
   "pauses": [],
-  "author_confirmed_no_pauses": null,
+  "author_confirmed_no_pauses": true,
+  "no_pauses_confirmation_source": "author explicitly replied Без перерывов about 2026-11-23 22:05:35–22:26:20 Europe/Warsaw",
   "baseline_commit": null,
   "baseline_frozen": false,
   "initial_attempt_verification": {
@@ -40,7 +41,7 @@
     "failed": 3,
     "file_sha256": "1e7648cf14b895849d9a3515748ac72e5dee3ddb3e624ef1cdca27fd7608c009",
     "assistant_changed_test_implementation": false,
-    "timing_scope": "1245 seconds is the initial attempt wall interval only; no pauses have been reported, but no-pause confirmation is still pending; subsequent author correction time must be recorded separately"
+    "timing_scope": "1245 seconds is the initial attempt wall interval only; author confirmed no pauses; includes communication latency and is not active-only telemetry; subsequent author correction time must be recorded separately"
   },
   "initial_read_only_check": {
     "scope": "first check after recording the explicit start; not an exact-instant snapshot of the start clock reading",
