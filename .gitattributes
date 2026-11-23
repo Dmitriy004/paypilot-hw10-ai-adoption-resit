@@ -1,3 +1,3 @@
 * text=auto eol=lf
 *.ps1 text eol=crlf
-artifacts/mentor-fallback/tests_backup.txt -text
+artifacts/mentor-fallback/tests_backup.txt -text -diff
