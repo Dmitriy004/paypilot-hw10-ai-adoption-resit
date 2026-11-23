@@ -1,0 +1,117 @@
+import pytest
+
+from app.engines.fx import FxQuote, quote
+
+
+@pytest.mark.parametrize(
+    ("amount", "expected_spread_pct", "expected_final"),
+    [
+        (500.00, 0.0, 500.00),
+        (500.01, 1.5, 492.50985),
+    ],
+)
+def test_tier1_allowance_exact_boundary_and_one_cent_over(
+    amount, expected_spread_pct, expected_final
+):
+    result = quote(amount, "EUR", "EUR", "tier1")
+
+    assert result.allowance_total_eur == 500
+    assert result.allowance_applied is (amount <= 500)
+    assert result.spread_pct == expected_spread_pct
+    assert result.final_amount == pytest.approx(expected_final)
+
+
+@pytest.mark.parametrize(
+    ("amount", "expected_spread"),
+    [(100.00, 0.0), (100.01, 1.5)],
+)
+def test_allowance_used_before_is_included_in_limit_check(amount, expected_spread):
+    result = quote(amount, "EUR", "EUR", "tier1", allowance_used_eur=400)
+
+    assert result.allowance_used_before_eur == 400
+    assert result.spread_pct == expected_spread
+    assert result.allowance_applied is (amount == 100)
+
+
+@pytest.mark.parametrize(
+    ("tier", "allowance", "spread_pct"),
+    [("tier1", 500, 1.5), ("tier2", 1000, 0.9), ("tier3", 5000, 0.5)],
+)
+def test_tier_specific_spread_when_free_limit_exceeded(tier, allowance, spread_pct):
+    result = quote(6000, "EUR", "EUR", tier)
+
+    assert result.allowance_total_eur == allowance
+    assert result.allowance_applied is False
+    assert result.gross_amount == pytest.approx(6000)
+    assert result.spread_pct == spread_pct
+    assert result.spread_amount == pytest.approx(6000 * spread_pct / 100)
+    assert result.final_amount == pytest.approx(6000 * (1 - spread_pct / 100))
+
+
+def test_cross_currency_conversion_uses_both_eur_rates():
+    result = quote(100, "GBP", "PLN", "tier1")
+    expected_rate = 1.17 / 0.23
+    expected_gross = 100 * expected_rate
+
+    assert isinstance(result, FxQuote)
+    assert result.mid_rate == pytest.approx(expected_rate)
+    assert result.gross_amount == pytest.approx(expected_gross)
+    assert result.allowance_applied is True
+    assert result.spread_amount == 0
+    assert result.final_amount == pytest.approx(expected_gross)
+
+
+def test_partial_allowance_charges_only_exceeding_portion():
+    result = quote(
+        200, "EUR", "EUR", "tier1",
+        allowance_used_eur=400, partial_allowance=True,
+    )
+
+    assert result.allowance_applied is False
+    assert result.spread_pct == 1.5
+    assert result.gross_amount == 200
+    assert result.spread_amount == pytest.approx(100 * 0.015)
+    assert result.final_amount == pytest.approx(198.5)
+
+
+def test_partial_allowance_after_limit_exhausted_charges_full_amount():
+    result = quote(
+        200, "EUR", "EUR", "tier1",
+        allowance_used_eur=500, partial_allowance=True,
+    )
+
+    assert result.allowance_applied is False
+    assert result.spread_amount == pytest.approx(3.0)
+    assert result.final_amount == pytest.approx(197.0)
+
+
+@pytest.mark.parametrize(
+    ("amount", "expected_spread_pct", "expected_spread_amount"),
+    [(100.0, 0.0, 0.0), (600.0, 2.0, 12.0)],
+)
+def test_spread_override_applies_only_outside_free_allowance(
+    amount, expected_spread_pct, expected_spread_amount
+):
+    result = quote(
+        amount, "EUR", "EUR", "tier1", spread_pct_override=2.0,
+    )
+
+    assert result.spread_pct == expected_spread_pct
+    assert result.spread_amount == pytest.approx(expected_spread_amount)
+    assert result.final_amount == pytest.approx(amount - expected_spread_amount)
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    [
+        ({"tier": "unknown"}, "Unknown tier: unknown"),
+        ({"from_currency": "XYZ"}, "Unknown currency: XYZ"),
+        ({"to_currency": "XYZ"}, "Unknown currency: XYZ"),
+    ],
+)
+def test_unknown_tier_or_currency_raises_value_error(kwargs, message):
+    arguments = {"amount": 100, "from_currency": "EUR", "to_currency": "USD", "tier": "tier1"}
+    arguments.update(kwargs)
+
+    with pytest.raises(ValueError, match=f"^{message}$"):
+        quote(**arguments)

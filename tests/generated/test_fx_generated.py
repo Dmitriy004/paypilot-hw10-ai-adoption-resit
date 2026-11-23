@@ -1,144 +1,117 @@
-from unittest import TestCase
-from app.engines import fx, policy
+import pytest
+
+from app.engines.fx import FxQuote, quote
 
 
-class TestFxModule(TestCase):
-    def setUp(self):
-        # Backup original policy values to restore after tests
-        self.original_rates = policy.RATES_TO_EUR.copy()
-        self.original_tiers = policy.TIERS[:]
-        self.original_allowance = policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.copy()
-        self.original_spread_pct = policy.FX_SPREAD_PCT.copy()
-        self.original_transfer_fees = policy.TRANSFER_FEES.copy()
+@pytest.mark.parametrize(
+    ("amount", "expected_spread_pct", "expected_final"),
+    [
+        (500.00, 0.0, 500.00),
+        (500.01, 1.5, 492.50985),
+    ],
+)
+def test_tier1_allowance_exact_boundary_and_one_cent_over(
+    amount, expected_spread_pct, expected_final
+):
+    result = quote(amount, "EUR", "EUR", "tier1")
 
-        # Setup sample policy data for tests
-        policy.RATES_TO_EUR.update({
-            "USD": 1.1,
-            "EUR": 1.0,
-            "GBP": 0.9,
-            "JPY": 130.0,
-        })
-        policy.TIERS[:] = ["basic", "premium"]
-        policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.update({
-            "basic": 1000.0,
-            "premium": 5000.0,
-        })
-        policy.FX_SPREAD_PCT.update({
-            "basic": 1.0,
-            "premium": 0.5,
-        })
-        policy.TRANSFER_FEES.update({
-            "standard": (1.0, 0.5),
-            "express": (5.0, 1.0),
-        })
+    assert result.allowance_total_eur == 500
+    assert result.allowance_applied is (amount <= 500)
+    assert result.spread_pct == expected_spread_pct
+    assert result.final_amount == pytest.approx(expected_final)
 
-    def tearDown(self):
-        # Restore original policy values
-        policy.RATES_TO_EUR.clear()
-        policy.RATES_TO_EUR.update(self.original_rates)
-        policy.TIERS[:] = self.original_tiers
-        policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.clear()
-        policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.update(self.original_allowance)
-        policy.FX_SPREAD_PCT.clear()
-        policy.FX_SPREAD_PCT.update(self.original_spread_pct)
-        policy.TRANSFER_FEES.clear()
-        policy.TRANSFER_FEES.update(self.original_transfer_fees)
 
-    def test_mid_rate_known_currencies(self):
-        rate = fx.mid_rate("USD", "EUR")
-        expected = policy.RATES_TO_EUR["USD"] / policy.RATES_TO_EUR["EUR"]
-        self.assertAlmostEqual(rate, expected)
+@pytest.mark.parametrize(
+    ("amount", "expected_spread"),
+    [(100.00, 0.0), (100.01, 1.5)],
+)
+def test_allowance_used_before_is_included_in_limit_check(amount, expected_spread):
+    result = quote(amount, "EUR", "EUR", "tier1", allowance_used_eur=400)
 
-        rate = fx.mid_rate("GBP", "JPY")
-        expected = policy.RATES_TO_EUR["GBP"] / policy.RATES_TO_EUR["JPY"]
-        self.assertAlmostEqual(rate, expected)
+    assert result.allowance_used_before_eur == 400
+    assert result.spread_pct == expected_spread
+    assert result.allowance_applied is (amount == 100)
 
-    def test_mid_rate_unknown_currency_raises(self):
-        with self.assertRaises(ValueError):
-            fx.mid_rate("XYZ", "EUR")
-        with self.assertRaises(ValueError):
-            fx.mid_rate("USD", "ABC")
 
-    def test_quote_basic_within_allowance(self):
-        amount = 100.0
-        tier = "basic"
-        from_currency = "USD"
-        to_currency = "EUR"
-        allowance_used = 0.0
-        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used)
-        self.assertEqual(quote.tier, tier)
-        self.assertTrue(quote.allowance_applied)
-        self.assertEqual(quote.spread_pct, 0.0)
-        self.assertAlmostEqual(quote.gross_amount, amount * fx.mid_rate(from_currency, to_currency))
-        self.assertAlmostEqual(quote.final_amount, quote.gross_amount)
+@pytest.mark.parametrize(
+    ("tier", "allowance", "spread_pct"),
+    [("tier1", 500, 1.5), ("tier2", 1000, 0.9), ("tier3", 5000, 0.5)],
+)
+def test_tier_specific_spread_when_free_limit_exceeded(tier, allowance, spread_pct):
+    result = quote(6000, "EUR", "EUR", tier)
 
-    def test_quote_basic_exceeds_allowance_default_spread(self):
-        amount = 2000.0
-        tier = "basic"
-        from_currency = "USD"
-        to_currency = "EUR"
-        allowance_used = 900.0  # so 900 + amount_eur > 1000 allowance
-        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used)
-        self.assertFalse(quote.allowance_applied)
-        self.assertEqual(quote.spread_pct, policy.FX_SPREAD_PCT[tier])
-        self.assertGreater(quote.spread_amount, 0)
-        self.assertAlmostEqual(quote.final_amount, quote.gross_amount - quote.spread_amount)
+    assert result.allowance_total_eur == allowance
+    assert result.allowance_applied is False
+    assert result.gross_amount == pytest.approx(6000)
+    assert result.spread_pct == spread_pct
+    assert result.spread_amount == pytest.approx(6000 * spread_pct / 100)
+    assert result.final_amount == pytest.approx(6000 * (1 - spread_pct / 100))
 
-    def test_quote_basic_exceeds_allowance_override_spread(self):
-        amount = 2000.0
-        tier = "basic"
-        from_currency = "USD"
-        to_currency = "EUR"
-        allowance_used = 900.0
-        spread_override = 2.5
-        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used,
-                         spread_pct_override=spread_override)
-        self.assertFalse(quote.allowance_applied)
-        self.assertEqual(quote.spread_pct, spread_override)
 
-    def test_quote_partial_allowance_applied(self):
-        amount = 2000.0
-        tier = "basic"
-        from_currency = "USD"
-        to_currency = "EUR"
-        # Use partial allowance: allowance used + amount_eur > total, partial_allowance=True
-        allowance_used = 900.0
-        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used,
-                         partial_allowance=True)
-        self.assertFalse(quote.allowance_applied)
-        self.assertGreater(quote.spread_amount, 0)
-        # spread_amount should be less than full spread because part of allowance applies
-        full_spread_amount = quote.gross_amount * policy.FX_SPREAD_PCT[tier] / 100.0
-        self.assertLess(quote.spread_amount, full_spread_amount)
+def test_cross_currency_conversion_uses_both_eur_rates():
+    result = quote(100, "GBP", "PLN", "tier1")
+    expected_rate = 1.17 / 0.23
+    expected_gross = 100 * expected_rate
 
-    def test_quote_invalid_tier_raises(self):
-        with self.assertRaises(ValueError):
-            fx.quote(100, "USD", "EUR", "unknown_tier")
+    assert isinstance(result, FxQuote)
+    assert result.mid_rate == pytest.approx(expected_rate)
+    assert result.gross_amount == pytest.approx(expected_gross)
+    assert result.allowance_applied is True
+    assert result.spread_amount == 0
+    assert result.final_amount == pytest.approx(expected_gross)
 
-    def test_quote_as_dict_rounding(self):
-        amount = 123.456789123
-        tier = "basic"
-        from_currency = "USD"
-        to_currency = "EUR"
-        q = fx.quote(amount, from_currency, to_currency, tier)
-        d = q.as_dict()
-        self.assertIsInstance(d, dict)
-        # All float values should be rounded to 6 decimals
-        for k, v in d.items():
-            if isinstance(v, float):
-                self.assertEqual(round(v, 6), v)
 
-    def test_transfer_fee_known_type(self):
-        amount_eur = 1000.0
-        transfer_type = "standard"
-        fee_info = fx.transfer_fee(amount_eur, transfer_type)
-        self.assertEqual(fee_info["transfer_type"], transfer_type)
-        flat, pct = policy.TRANSFER_FEES[transfer_type]
-        expected_fee = flat + amount_eur * pct / 100.0
-        self.assertAlmostEqual(fee_info["total_fee_eur"], round(expected_fee, 2))
-        self.assertEqual(fee_info["flat_fee_eur"], flat)
-        self.assertEqual(fee_info["percent_fee"], pct)
+def test_partial_allowance_charges_only_exceeding_portion():
+    result = quote(
+        200, "EUR", "EUR", "tier1",
+        allowance_used_eur=400, partial_allowance=True,
+    )
 
-    def test_transfer_fee_unknown_type_raises(self):
-        with self.assertRaises(ValueError):
-            fx.transfer_fee(100.0, "unknown_type")
+    assert result.allowance_applied is False
+    assert result.spread_pct == 1.5
+    assert result.gross_amount == 200
+    assert result.spread_amount == pytest.approx(100 * 0.015)
+    assert result.final_amount == pytest.approx(198.5)
+
+
+def test_partial_allowance_after_limit_exhausted_charges_full_amount():
+    result = quote(
+        200, "EUR", "EUR", "tier1",
+        allowance_used_eur=500, partial_allowance=True,
+    )
+
+    assert result.allowance_applied is False
+    assert result.spread_amount == pytest.approx(3.0)
+    assert result.final_amount == pytest.approx(197.0)
+
+
+@pytest.mark.parametrize(
+    ("amount", "expected_spread_pct", "expected_spread_amount"),
+    [(100.0, 0.0, 0.0), (600.0, 2.0, 12.0)],
+)
+def test_spread_override_applies_only_outside_free_allowance(
+    amount, expected_spread_pct, expected_spread_amount
+):
+    result = quote(
+        amount, "EUR", "EUR", "tier1", spread_pct_override=2.0,
+    )
+
+    assert result.spread_pct == expected_spread_pct
+    assert result.spread_amount == pytest.approx(expected_spread_amount)
+    assert result.final_amount == pytest.approx(amount - expected_spread_amount)
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    [
+        ({"tier": "unknown"}, "Unknown tier: unknown"),
+        ({"from_currency": "XYZ"}, "Unknown currency: XYZ"),
+        ({"to_currency": "XYZ"}, "Unknown currency: XYZ"),
+    ],
+)
+def test_unknown_tier_or_currency_raises_value_error(kwargs, message):
+    arguments = {"amount": 100, "from_currency": "EUR", "to_currency": "USD", "tier": "tier1"}
+    arguments.update(kwargs)
+
+    with pytest.raises(ValueError, match=f"^{message}$"):
+        quote(**arguments)

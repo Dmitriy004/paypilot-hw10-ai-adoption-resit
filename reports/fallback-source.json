@@ -1,0 +1,30 @@
+{
+  "kind": "fallback",
+  "provided_by": "user",
+  "mentor_agreement_source": "user statement accompanying supplied tests_backup.txt; not independently observed",
+  "source_file": "C:\\Users\\Admin\\Documents\\Magasin_work\\AI\\tests_backup.txt",
+  "source_sha256": "d00668a279d0cebb7a467760e319c351f563ae7fed4584e7fac7d347ad020dbf",
+  "canonical_file": "tests/generated/test_fx_generated.py",
+  "canonical_sha256": "8f1999ea58e3c515d7fd82a14ec5362dea76c307cdebfc5615155b03d437c7da",
+  "transformation": "line endings normalized to LF; optional UTF-8 BOM decoding only; no code edits",
+  "functions": [
+    "test_tier1_allowance_exact_boundary_and_one_cent_over",
+    "test_allowance_used_before_is_included_in_limit_check",
+    "test_tier_specific_spread_when_free_limit_exceeded",
+    "test_cross_currency_conversion_uses_both_eur_rates",
+    "test_partial_allowance_charges_only_exceeding_portion",
+    "test_partial_allowance_after_limit_exhausted_charges_full_amount",
+    "test_spread_override_applies_only_outside_free_allowance",
+    "test_unknown_tier_or_currency_raises_value_error"
+  ],
+  "function_count": 8,
+  "import_observed_utc": "2026-11-23T22:09:29.167018+00:00",
+  "prior_raw_commit": "b69af5e26908e905ff4f2b185729aea7b27ad4e5",
+  "prior_raw_sha256": "b38470cfc53e78a607284ff7e4a0bae78f331d6da8e352b1340594bc9c77be31",
+  "prior_raw_archive": "artifacts/failed-generation/test_fx_generated.py.txt",
+  "generation_provider": null,
+  "generation_model": null,
+  "generation_seconds": null,
+  "generation_cost_usd": null,
+  "review_started": false
+}
