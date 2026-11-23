@@ -1,5 +1,5 @@
 {
-  "status": "finished_pending_time_clarification",
+  "status": "completed",
   "timezone": "Europe/Warsaw",
   "reviewed_set_kind": "fallback",
   "reviewed_set_commit": "813b31c5ab75666a5658bde9445046b371aa92fb",
@@ -15,8 +15,11 @@
   "elapsed_minutes": 16.4,
   "per_function_review_seconds": 144,
   "per_function_rewrite_seconds": 0,
-  "unallocated_wall_seconds": 840,
-  "unallocated_time_explanation": null,
+  "unallocated_wall_seconds": 0,
+  "workflow_overhead_seconds": 840,
+  "unallocated_time_explanation": "author explained the 840-second remainder as journal completion, reading criteria and IDE work; no per-category timing measured",
+  "workflow_overhead_categories": ["journal completion", "reading criteria", "IDE work"],
+  "workflow_overhead_source": "author clarification after finish; remainder calculated from wall984 minus recorded144, not separately stopwatch-measured",
   "accepted_functions": 8,
   "rejected_functions": 0,
   "rewritten_functions": 0,
@@ -37,7 +40,8 @@
     }
   ],
   "pauses": [],
-  "author_confirmed_no_pauses": null,
+  "author_confirmed_no_pauses": true,
+  "no_pauses_confirmation_source": "author replied без перерывов about 23:13:25–23:29:49 Europe/Warsaw",
   "review_log": "review-log.md",
   "rule": "real author start/finish and per-function records only; do not inherit old review verdicts or times"
 }
