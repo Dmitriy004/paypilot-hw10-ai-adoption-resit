@@ -1,0 +1,18 @@
+{
+  "kind": "observed_lms_resubmission_confirmation",
+  "page_url": "https://www.edu.goit.global/uk/learn/53575439/54507480/54593549/homework",
+  "submitted_repository": "https://github.com/Dmitriy004/paypilot-hw10-ai-adoption-resit",
+  "main_commit_at_submission": "5cdb574986ec4683f5903e2b95a27244babed47d",
+  "verified_code_source_commit": "37dcd806dc70f98432bfc1fea8c0443fd16c6ae7",
+  "confirmation_recorded_utc": "2026-11-23T22:46:33Z",
+  "confirmation_recorded_local": "2026-11-23T23:46:33+01:00",
+  "time_scope": "clock reading after observing success state; not an exact server submission timestamp",
+  "observed_status": "Завдання на перевірці",
+  "observed_heading": "Ти відправив домашнє завдання",
+  "observed_message": "Супер, ментор скоро це перевірить",
+  "submitted_link_verified_in_success_state": true,
+  "mentor_acceptance_confirmed": false,
+  "screenshot_local_path": "C:/Users/Admin/.codex/visualizations/2026/09/27/01a0e467-0383-72e0-a6d1-ac067783f825/hw10-resit-submitted.jpg",
+  "screenshot_sha256": "d4fad735c826ffacdce5315218e4e3f91d9551d38888557cecf50f3607f351b2",
+  "screenshot_committed": false
+}
