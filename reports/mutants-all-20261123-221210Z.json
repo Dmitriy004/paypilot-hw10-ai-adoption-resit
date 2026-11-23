@@ -1,0 +1,114 @@
+{
+  "set": "all",
+  "paths": [
+    "tests/manual",
+    "tests/generated"
+  ],
+  "started_at": "2026-11-23T23:12:10.163814+01:00",
+  "mutants_file": "mutants.toml",
+  "mutants_git": {
+    "committed_at": "2026-11-23T22:37:24+01:00",
+    "commit": "717e692",
+    "uncommitted": false,
+    "head": "493ad1d"
+  },
+  "killed": 10,
+  "total": 12,
+  "mutation_score": 0.8333,
+  "by_class": {
+    "значення тіру": {
+      "total": 3,
+      "killed": 3
+    },
+    "межа EUR 1 000": {
+      "total": 3,
+      "killed": 3
+    },
+    "арифметика": {
+      "total": 3,
+      "killed": 3
+    },
+    "форма результату": {
+      "total": 3,
+      "killed": 1
+    }
+  },
+  "survived": [
+    "D-01",
+    "D-03"
+  ],
+  "rows": [
+    {
+      "id": "A-01",
+      "class": "значення тіру",
+      "description": "Спред tier2 підмінено з 0.9% на 1.5% (наслідок D20).",
+      "killed": true
+    },
+    {
+      "id": "A-02",
+      "class": "значення тіру",
+      "description": "Стандартний спред tier1 занижено з 1.5% до 1.0%.",
+      "killed": true
+    },
+    {
+      "id": "A-03",
+      "class": "значення тіру",
+      "description": "Стандартний спред tier3 підвищено з 0.5% до 0.9%.",
+      "killed": true
+    },
+    {
+      "id": "B-01",
+      "class": "межа EUR 1 000",
+      "description": "Точну межу безкоштовного ліміту помилково зроблено платною.",
+      "killed": true
+    },
+    {
+      "id": "B-02",
+      "class": "межа EUR 1 000",
+      "description": "Межу tier2 знижено до EUR999: рівно EUR1000 більше не безкоштовно.",
+      "killed": true
+    },
+    {
+      "id": "B-03",
+      "class": "межа EUR 1 000",
+      "description": "Межу tier2 підвищено до EUR1001: понад EUR1000 зайво надається пільга.",
+      "killed": true
+    },
+    {
+      "id": "C-01",
+      "class": "арифметика",
+      "description": "Крос-курс отримують множенням замість ділення.",
+      "killed": true
+    },
+    {
+      "id": "C-02",
+      "class": "арифметика",
+      "description": "Суму конвертації ділять на курс замість множення.",
+      "killed": true
+    },
+    {
+      "id": "C-03",
+      "class": "арифметика",
+      "description": "Комісію додають до виплати клієнтові замість віднімання.",
+      "killed": true
+    },
+    {
+      "id": "D-01",
+      "class": "форма результату",
+      "description": "Серіалізований результат не містить обов'язкового final_amount.",
+      "killed": false
+    },
+    {
+      "id": "D-02",
+      "class": "форма результату",
+      "description": "Прапорець застосування безкоштовного ліміту інвертовано.",
+      "killed": true
+    },
+    {
+      "id": "D-03",
+      "class": "форма результату",
+      "description": "Метадані результату завжди називають tier1 замість запитаного тіру.",
+      "killed": false
+    }
+  ]
+}

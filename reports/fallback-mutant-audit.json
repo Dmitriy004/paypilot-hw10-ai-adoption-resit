@@ -1,0 +1,112 @@
+{
+  "kind": "assertion_and_nonequivalence_audit",
+  "source_head": "493ad1d4732b7927e95774839a2787f02f7ea9a7",
+  "observed_utc": "2026-11-23T22:13:08.344123+00:00",
+  "rows": [
+    {
+      "id": "A-01",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".....F\n================================== FAILURES ===================================\n_____ test_tier_specific_spread_when_free_limit_exceeded[tier2-1000-0.9] ______\n\ntier = 'tier2', allowance = 1000, spread_pct = 0.9\n\n    @pytest.mark.parametrize(\n        (\"tier\", \"allowance\", \"spread_pct\"),\n        [(\"tier1\", 500, 1.5), (\"tier2\", 1000, 0.9), (\"tier3\", 5000, 0.5)],\n    )\n    def test_tier_specific_spread_when_free_limit_exceeded(tier, allowance, spread_pct):\n        result = quote(6000, \"EUR\", \"EUR\", tier)\n    \n        assert result.allowance_total_eur == allowance\n        assert result.allowance_applied is False\n        assert result.gross_amount == pytest.approx(6000)\n>       assert result.spread_pct == spread_pct\nE       AssertionError: assert 1.5 == 0.9\nE        +  where 1.5 = FxQuote(from_currency='EUR', to_currency='EUR', amount=6000, mid_rate=1.0, tier='tier2', spread_pct=1.5, allowance_tot..., allowance_used_before_eur=0.0, allowance_applied=False, gross_amount=6000.0, spread_amount=90.0, final_amount=5910.0).spread_pct\n\ntests\\generated\\test_fx_generated.py:46: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier_specific_spread_when_free_limit_exceeded[tier2-1000-0.9]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 5 passed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "A-02",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".F\n================================== FAILURES ===================================\n_ test_tier1_allowance_exact_boundary_and_one_cent_over[500.01-1.5-492.50985] _\n\namount = 500.01, expected_spread_pct = 1.5, expected_final = 492.50985\n\n    @pytest.mark.parametrize(\n        (\"amount\", \"expected_spread_pct\", \"expected_final\"),\n        [\n            (500.00, 0.0, 500.00),\n            (500.01, 1.5, 492.50985),\n        ],\n    )\n    def test_tier1_allowance_exact_boundary_and_one_cent_over(\n        amount, expected_spread_pct, expected_final\n    ):\n        result = quote(amount, \"EUR\", \"EUR\", \"tier1\")\n    \n        assert result.allowance_total_eur == 500\n        assert result.allowance_applied is (amount <= 500)\n>       assert result.spread_pct == expected_spread_pct\nE       AssertionError: assert 1.0 == 1.5\nE        +  where 1.0 = FxQuote(from_currency='EUR', to_currency='EUR', amount=500.01, mid_rate=1.0, tier='tier1', spread_pct=1.0, allowance_t...lowance_used_before_eur=0.0, allowance_applied=False, gross_amount=500.01, spread_amount=5.0001, final_amount=495.0099).spread_pct\n\ntests\\generated\\test_fx_generated.py:20: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier1_allowance_exact_boundary_and_one_cent_over[500.01-1.5-492.50985]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 1 passed in 0.11s\n",
+      "stderr": ""
+    },
+    {
+      "id": "A-03",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": "......F\n================================== FAILURES ===================================\n_____ test_tier_specific_spread_when_free_limit_exceeded[tier3-5000-0.5] ______\n\ntier = 'tier3', allowance = 5000, spread_pct = 0.5\n\n    @pytest.mark.parametrize(\n        (\"tier\", \"allowance\", \"spread_pct\"),\n        [(\"tier1\", 500, 1.5), (\"tier2\", 1000, 0.9), (\"tier3\", 5000, 0.5)],\n    )\n    def test_tier_specific_spread_when_free_limit_exceeded(tier, allowance, spread_pct):\n        result = quote(6000, \"EUR\", \"EUR\", tier)\n    \n        assert result.allowance_total_eur == allowance\n        assert result.allowance_applied is False\n        assert result.gross_amount == pytest.approx(6000)\n>       assert result.spread_pct == spread_pct\nE       AssertionError: assert 0.9 == 0.5\nE        +  where 0.9 = FxQuote(from_currency='EUR', to_currency='EUR', amount=6000, mid_rate=1.0, tier='tier3', spread_pct=0.9, allowance_tot..., allowance_used_before_eur=0.0, allowance_applied=False, gross_amount=6000.0, spread_amount=54.0, final_amount=5946.0).spread_pct\n\ntests\\generated\\test_fx_generated.py:46: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier_specific_spread_when_free_limit_exceeded[tier3-5000-0.5]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 6 passed in 0.11s\n",
+      "stderr": ""
+    },
+    {
+      "id": "B-01",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": "F\n================================== FAILURES ===================================\n___ test_tier1_allowance_exact_boundary_and_one_cent_over[500.0-0.0-500.0] ____\n\namount = 500.0, expected_spread_pct = 0.0, expected_final = 500.0\n\n    @pytest.mark.parametrize(\n        (\"amount\", \"expected_spread_pct\", \"expected_final\"),\n        [\n            (500.00, 0.0, 500.00),\n            (500.01, 1.5, 492.50985),\n        ],\n    )\n    def test_tier1_allowance_exact_boundary_and_one_cent_over(\n        amount, expected_spread_pct, expected_final\n    ):\n        result = quote(amount, \"EUR\", \"EUR\", \"tier1\")\n    \n        assert result.allowance_total_eur == 500\n>       assert result.allowance_applied is (amount <= 500)\nE       AssertionError: assert False is (500.0 <= 500)\nE        +  where False = FxQuote(from_currency='EUR', to_currency='EUR', amount=500.0, mid_rate=1.0, tier='tier1', spread_pct=1.5, allowance_to...500, allowance_used_before_eur=0.0, allowance_applied=False, gross_amount=500.0, spread_amount=7.5, final_amount=492.5).allowance_applied\n\ntests\\generated\\test_fx_generated.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier1_allowance_exact_boundary_and_one_cent_over[500.0-0.0-500.0]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "B-02",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".....F\n================================== FAILURES ===================================\n_____ test_tier_specific_spread_when_free_limit_exceeded[tier2-1000-0.9] ______\n\ntier = 'tier2', allowance = 1000, spread_pct = 0.9\n\n    @pytest.mark.parametrize(\n        (\"tier\", \"allowance\", \"spread_pct\"),\n        [(\"tier1\", 500, 1.5), (\"tier2\", 1000, 0.9), (\"tier3\", 5000, 0.5)],\n    )\n    def test_tier_specific_spread_when_free_limit_exceeded(tier, allowance, spread_pct):\n        result = quote(6000, \"EUR\", \"EUR\", tier)\n    \n>       assert result.allowance_total_eur == allowance\nE       AssertionError: assert 999 == 1000\nE        +  where 999 = FxQuote(from_currency='EUR', to_currency='EUR', amount=6000, mid_rate=1.0, tier='tier2', spread_pct=0.9, allowance_tot..., allowance_used_before_eur=0.0, allowance_applied=False, gross_amount=6000.0, spread_amount=54.0, final_amount=5946.0).allowance_total_eur\n\ntests\\generated\\test_fx_generated.py:43: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier_specific_spread_when_free_limit_exceeded[tier2-1000-0.9]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 5 passed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "B-03",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".....F\n================================== FAILURES ===================================\n_____ test_tier_specific_spread_when_free_limit_exceeded[tier2-1000-0.9] ______\n\ntier = 'tier2', allowance = 1000, spread_pct = 0.9\n\n    @pytest.mark.parametrize(\n        (\"tier\", \"allowance\", \"spread_pct\"),\n        [(\"tier1\", 500, 1.5), (\"tier2\", 1000, 0.9), (\"tier3\", 5000, 0.5)],\n    )\n    def test_tier_specific_spread_when_free_limit_exceeded(tier, allowance, spread_pct):\n        result = quote(6000, \"EUR\", \"EUR\", tier)\n    \n>       assert result.allowance_total_eur == allowance\nE       AssertionError: assert 1001 == 1000\nE        +  where 1001 = FxQuote(from_currency='EUR', to_currency='EUR', amount=6000, mid_rate=1.0, tier='tier2', spread_pct=0.9, allowance_tot..., allowance_used_before_eur=0.0, allowance_applied=False, gross_amount=6000.0, spread_amount=54.0, final_amount=5946.0).allowance_total_eur\n\ntests\\generated\\test_fx_generated.py:43: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier_specific_spread_when_free_limit_exceeded[tier2-1000-0.9]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 5 passed in 0.11s\n",
+      "stderr": ""
+    },
+    {
+      "id": "C-01",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".......F\n================================== FAILURES ===================================\n_____________ test_cross_currency_conversion_uses_both_eur_rates ______________\n\n    def test_cross_currency_conversion_uses_both_eur_rates():\n        result = quote(100, \"GBP\", \"PLN\", \"tier1\")\n        expected_rate = 1.17 / 0.23\n        expected_gross = 100 * expected_rate\n    \n        assert isinstance(result, FxQuote)\n>       assert result.mid_rate == pytest.approx(expected_rate)\nE       assert 0.2691 == 5.08695652173913 � 5.1e-06\nE         \nE         comparison failed\nE         Obtained: 0.2691\nE         Expected: 5.08695652173913 � 5.1e-06\n\ntests\\generated\\test_fx_generated.py:57: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_cross_currency_conversion_uses_both_eur_rates\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 7 passed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "C-02",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".......F\n================================== FAILURES ===================================\n_____________ test_cross_currency_conversion_uses_both_eur_rates ______________\n\n    def test_cross_currency_conversion_uses_both_eur_rates():\n        result = quote(100, \"GBP\", \"PLN\", \"tier1\")\n        expected_rate = 1.17 / 0.23\n        expected_gross = 100 * expected_rate\n    \n        assert isinstance(result, FxQuote)\n        assert result.mid_rate == pytest.approx(expected_rate)\n>       assert result.gross_amount == pytest.approx(expected_gross)\nE       assert 19.65811965811966 == 508.695652173913 � 5.1e-04\nE         \nE         comparison failed\nE         Obtained: 19.65811965811966\nE         Expected: 508.695652173913 � 5.1e-04\n\ntests\\generated\\test_fx_generated.py:58: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_cross_currency_conversion_uses_both_eur_rates\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 7 passed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "C-03",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": ".F\n================================== FAILURES ===================================\n_ test_tier1_allowance_exact_boundary_and_one_cent_over[500.01-1.5-492.50985] _\n\namount = 500.01, expected_spread_pct = 1.5, expected_final = 492.50985\n\n    @pytest.mark.parametrize(\n        (\"amount\", \"expected_spread_pct\", \"expected_final\"),\n        [\n            (500.00, 0.0, 500.00),\n            (500.01, 1.5, 492.50985),\n        ],\n    )\n    def test_tier1_allowance_exact_boundary_and_one_cent_over(\n        amount, expected_spread_pct, expected_final\n    ):\n        result = quote(amount, \"EUR\", \"EUR\", \"tier1\")\n    \n        assert result.allowance_total_eur == 500\n        assert result.allowance_applied is (amount <= 500)\n        assert result.spread_pct == expected_spread_pct\n>       assert result.final_amount == pytest.approx(expected_final)\nE       assert 507.51015 == 492.50985 � 4.9e-04\nE         \nE         comparison failed\nE         Obtained: 507.51015\nE         Expected: 492.50985 � 4.9e-04\n\ntests\\generated\\test_fx_generated.py:21: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier1_allowance_exact_boundary_and_one_cent_over[500.01-1.5-492.50985]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 1 passed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "D-01",
+      "exit_code": 0,
+      "assertion_failure": false,
+      "stdout": "...............                                                          [100%]\n15 passed in 0.05s\n",
+      "stderr": ""
+    },
+    {
+      "id": "D-02",
+      "exit_code": 1,
+      "assertion_failure": true,
+      "stdout": "F\n================================== FAILURES ===================================\n___ test_tier1_allowance_exact_boundary_and_one_cent_over[500.0-0.0-500.0] ____\n\namount = 500.0, expected_spread_pct = 0.0, expected_final = 500.0\n\n    @pytest.mark.parametrize(\n        (\"amount\", \"expected_spread_pct\", \"expected_final\"),\n        [\n            (500.00, 0.0, 500.00),\n            (500.01, 1.5, 492.50985),\n        ],\n    )\n    def test_tier1_allowance_exact_boundary_and_one_cent_over(\n        amount, expected_spread_pct, expected_final\n    ):\n        result = quote(amount, \"EUR\", \"EUR\", \"tier1\")\n    \n        assert result.allowance_total_eur == 500\n>       assert result.allowance_applied is (amount <= 500)\nE       AssertionError: assert False is (500.0 <= 500)\nE        +  where False = FxQuote(from_currency='EUR', to_currency='EUR', amount=500.0, mid_rate=1.0, tier='tier1', spread_pct=0.0, allowance_to...500, allowance_used_before_eur=0.0, allowance_applied=False, gross_amount=500.0, spread_amount=0.0, final_amount=500.0).allowance_applied\n\ntests\\generated\\test_fx_generated.py:19: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/generated/test_fx_generated.py::test_tier1_allowance_exact_boundary_and_one_cent_over[500.0-0.0-500.0]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed in 0.12s\n",
+      "stderr": ""
+    },
+    {
+      "id": "D-03",
+      "exit_code": 0,
+      "assertion_failure": false,
+      "stdout": "...............                                                          [100%]\n15 passed in 0.05s\n",
+      "stderr": ""
+    }
+  ],
+  "survivor_witnesses": [
+    {
+      "id": "D-01",
+      "expression": "from app.engines.fx import quote; assert 'final_amount' in quote(1, 'EUR', 'EUR', 'tier1').as_dict()",
+      "original_exit": 0,
+      "mutant_exit": 1,
+      "mutant_stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nAssertionError\n"
+    },
+    {
+      "id": "D-03",
+      "expression": "from app.engines.fx import quote; assert quote(1, 'EUR', 'EUR', 'tier2').tier == 'tier2'",
+      "original_exit": 0,
+      "mutant_exit": 1,
+      "mutant_stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nAssertionError\n"
+    }
+  ],
+  "witnesses_are_assistant_diagnostics_not_author_rewrites": true,
+  "final_original_control": {
+    "exit_code": 0,
+    "stdout": ".....................                                                    [100%]\n21 passed in 0.08s\n"
+  }
+}
