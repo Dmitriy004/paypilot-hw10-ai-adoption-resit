@@ -1,0 +1,18 @@
+{
+  "status": "not_started",
+  "timezone": "Europe/Warsaw",
+  "reviewed_set_kind": "fallback",
+  "reviewed_set_commit": "813b31c5ab75666a5658bde9445046b371aa92fb",
+  "source_file": "tests/generated/test_fx_generated.py",
+  "source_sha256": "8f1999ea58e3c515d7fd82a14ec5362dea76c307cdebfc5615155b03d437c7da",
+  "functions": 8,
+  "cases": 15,
+  "start_utc": null,
+  "end_utc": null,
+  "elapsed_seconds": null,
+  "events": [],
+  "pauses": [],
+  "author_confirmed_no_pauses": null,
+  "review_log": "review-log.md",
+  "rule": "real author start/finish and per-function records only; do not inherit old review verdicts or times"
+}
