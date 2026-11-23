@@ -1,5 +1,5 @@
 {
-  "status": "in_progress",
+  "status": "finished_pending_time_clarification",
   "timezone": "Europe/Warsaw",
   "reviewed_set_kind": "fallback",
   "reviewed_set_commit": "813b31c5ab75666a5658bde9445046b371aa92fb",
@@ -9,8 +9,17 @@
   "cases": 15,
   "start_utc": "2026-11-23T22:13:25Z",
   "start_local": "2026-11-23T23:13:25+01:00",
-  "end_utc": null,
-  "elapsed_seconds": null,
+  "end_utc": "2026-11-23T22:29:49Z",
+  "end_local": "2026-11-23T23:29:49+01:00",
+  "elapsed_seconds": 984,
+  "elapsed_minutes": 16.4,
+  "per_function_review_seconds": 144,
+  "per_function_rewrite_seconds": 0,
+  "unallocated_wall_seconds": 840,
+  "unallocated_time_explanation": null,
+  "accepted_functions": 8,
+  "rejected_functions": 0,
+  "rewritten_functions": 0,
   "events": [
     {
       "event": "author_explicit_review_start",
@@ -18,6 +27,13 @@
       "observed_utc": "2026-11-23T22:13:25Z",
       "clock_source": "clock.curr_time immediately on receipt",
       "scope": "wall interval, includes communication latency; per-function author records tracked separately"
+    },
+    {
+      "event": "author_explicit_review_finish",
+      "message": "ревью готово",
+      "observed_utc": "2026-11-23T22:29:49Z",
+      "clock_source": "clock.curr_time on receipt, before reading the saved review log",
+      "scope": "984 seconds wall time; 144 seconds recorded per function, 840 seconds await author explanation; do not classify the remainder as active work or breaks yet"
     }
   ],
   "pauses": [],
