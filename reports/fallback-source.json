@@ -26,5 +26,12 @@
   "generation_model": null,
   "generation_seconds": null,
   "generation_cost_usd": null,
-  "review_started": false
+  "review_started_at_import": false,
+  "historical_content_identity": {
+    "repository": "https://github.com/Dmitriy004/paypilot-hw10-ai-adoption",
+    "commit": "55f6795b0dcc617058d4059947d83cc25d807e20",
+    "file": "tests/manual/test_fx_manual.py",
+    "git_blob": "59c9160e169c4fb692d5944ec56c67fa2eaf9d5a",
+    "meaning": "identical normalized content; previous use established, creator/model/creation time/cost not inferred"
+  }
 }

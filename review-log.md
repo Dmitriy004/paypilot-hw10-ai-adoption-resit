@@ -89,3 +89,22 @@ Verdict: accepted
 | G-08 | Рівень assertion; новизна; оракул N/A | До manual додає unknown tier/target currency та точні повідомлення; частина sourcecurrency сама по собі вже була в manual |
 
 Ця технічна звірка не змінює авторські verdicts, причини чи секунди й не рахується додатковим людським рев'ю. Поля про ім'я/незалежність не мають видимих суперечностей: функції не залежать від годинника, спільного змінного стану чи порядку.
+
+## Технічне відхилення первинного original-red output
+
+Окремий артефакт b69af5e26908e905ff4f2b185729aea7b27ad4e5, до запасного переходу. Підстава кожного rejected — правило original-red із заморожених критеріїв, не вигадане індивідуальне людське рев'ю. [Первинний прогін](reports/original-validation.json) доводить спільну причину: setUp, рядок21, tuple sliceassignment; testbody кожної функції не починається. Дія кожної: raw збережено в історії й архіві, для подальшого порівняння використано запасний набір. Людський час на кожну з цих10функцій **не виміряно**, не0 і не частина984с.
+
+| ID | Первинна функція | Технічний verdict | Критерій / причина |
+| --- | --- | --- | --- |
+| RAW-G01 | test_mid_rate_known_currencies | rejected | original-red / setUp |
+| RAW-G02 | test_mid_rate_unknown_currency_raises | rejected | original-red / setUp |
+| RAW-G03 | test_quote_basic_within_allowance | rejected | original-red / setUp |
+| RAW-G04 | test_quote_basic_exceeds_allowance_default_spread | rejected | original-red / setUp |
+| RAW-G05 | test_quote_basic_exceeds_allowance_override_spread | rejected | original-red / setUp |
+| RAW-G06 | test_quote_partial_allowance_applied | rejected | original-red / setUp |
+| RAW-G07 | test_quote_invalid_tier_raises | rejected | original-red / setUp |
+| RAW-G08 | test_quote_as_dict_rounding | rejected | original-red / setUp |
+| RAW-G09 | test_transfer_fee_known_type | rejected | original-red / setUp |
+| RAW-G10 | test_transfer_fee_unknown_type_raises | rejected | original-red / setUp |
+
+Технічно відхилено10/10первинного output. Авторський підсумок запасного набору залишається8/8accepted,0/8rejected. Ці два різні артефакти не зведені у спільний показник відхилення18функцій.

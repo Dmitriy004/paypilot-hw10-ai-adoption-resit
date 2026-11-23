@@ -2,8 +2,9 @@
 
     python tools/generation_summary.py reports/generation.json
 
-reports/generation.json — вивід Claude Code з прапорцем --output-format json.
+Записана генерація та поточний (можливо запасний) набір — різні артефакти.
 """
+import ast
 import json
 import re
 import sys
@@ -35,13 +36,37 @@ def main() -> int:
     for f in (ROOT / "tests" / "generated").glob("test_*.py"):
         tests += len(re.findall(r"^\s*def test_", f.read_text(encoding="utf-8"), re.M))
 
+    recorded_count = None
+    recorded = data.get("result")
+    if isinstance(recorded, str):
+        code = recorded.strip()
+        if code.startswith("```") and code.endswith("```"):
+            code = code.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+        try:
+            tree = ast.parse(code)
+        except SyntaxError:
+            pass
+        else:
+            recorded_count = sum(
+                isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and node.name.startswith("test_") for node in ast.walk(tree)
+            )
     models = ", ".join(data.get("modelUsage", {}) or []) or "?"
     minutes = (data.get("duration_ms") or 0) / 60000
-    print(f"Модель:               {models}")
-    print(f"Час машини, хв:       {minutes:.1f}")
+    cost = data.get("total_cost_usd")
+    cost_text = f"{cost:.6f}" if isinstance(cost, (int, float)) else "не встановлено"
+    print(f"Модель записаного запиту: {models}")
+    print(f"Час машини записаного запиту, хв: {minutes:.4f}")
     print(f"Кроків асистента:     {data.get('num_turns')}")
-    print(f"Вартість, USD:        {data.get('total_cost_usd', 0):.2f}")
-    print(f"Функцій test_ у tests/generated/: {tests}")
+    print(f"Вартість записаного запиту, USD (оцінка): {cost_text}")
+    print(f"Функцій у записаному output: {recorded_count if recorded_count is not None else 'не встановлено'}")
+    print(f"Поточний каталог tests/generated/: {tests} функцій")
+    manifest = ROOT / "reports" / "fallback-source.json"
+    if manifest.exists():
+        fallback = json.loads(manifest.read_text(encoding="utf-8-sig"))
+        if fallback.get("kind") == "fallback":
+            print(f"Запасний набір: {tests} функцій; модель, час і ціна створення невідомі")
+            print("Метадані записаного запиту не описують запасний файл.")
     return 0
 
 
