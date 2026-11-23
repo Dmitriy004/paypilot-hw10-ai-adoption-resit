@@ -1,5 +1,5 @@
 {
-  "status": "not_started",
+  "status": "in_progress",
   "timezone": "Europe/Warsaw",
   "reviewed_set_kind": "fallback",
   "reviewed_set_commit": "813b31c5ab75666a5658bde9445046b371aa92fb",
@@ -7,10 +7,19 @@
   "source_sha256": "8f1999ea58e3c515d7fd82a14ec5362dea76c307cdebfc5615155b03d437c7da",
   "functions": 8,
   "cases": 15,
-  "start_utc": null,
+  "start_utc": "2026-11-23T22:13:25Z",
+  "start_local": "2026-11-23T23:13:25+01:00",
   "end_utc": null,
   "elapsed_seconds": null,
-  "events": [],
+  "events": [
+    {
+      "event": "author_explicit_review_start",
+      "message": "Начинаю ревью",
+      "observed_utc": "2026-11-23T22:13:25Z",
+      "clock_source": "clock.curr_time immediately on receipt",
+      "scope": "wall interval, includes communication latency; per-function author records tracked separately"
+    }
+  ],
   "pauses": [],
   "author_confirmed_no_pauses": null,
   "review_log": "review-log.md",
