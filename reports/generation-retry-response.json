@@ -1,0 +1,101 @@
+{
+  "id": "resp_0b5f5757414c36d7016b04b49703d887d2874c2357434fb517",
+  "object": "response",
+  "created_at": 1795470487,
+  "status": "completed",
+  "access_programs": null,
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1795470497,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "image": {
+    "context_compression": "disabled"
+  },
+  "incomplete_details": null,
+  "input_transformations": [],
+  "instructions": "Return only the complete contents of the requested Python file, without Markdown fences.",
+  "max_output_tokens": 6500,
+  "max_tool_calls": null,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "moderation": null,
+  "output": [
+    {
+      "id": "msg_0b5f5757414c36d7016b04b497cdd887d2b86e22511c9a155d",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "from unittest import TestCase\nfrom app.engines import fx, policy\n\n\nclass TestFxModule(TestCase):\n    def setUp(self):\n        # Backup original policy values to restore after tests\n        self.original_rates = policy.RATES_TO_EUR.copy()\n        self.original_tiers = policy.TIERS[:]\n        self.original_allowance = policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.copy()\n        self.original_spread_pct = policy.FX_SPREAD_PCT.copy()\n        self.original_transfer_fees = policy.TRANSFER_FEES.copy()\n\n        # Setup sample policy data for tests\n        policy.RATES_TO_EUR.update({\n            \"USD\": 1.1,\n            \"EUR\": 1.0,\n            \"GBP\": 0.9,\n            \"JPY\": 130.0,\n        })\n        policy.TIERS[:] = [\"basic\", \"premium\"]\n        policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.update({\n            \"basic\": 1000.0,\n            \"premium\": 5000.0,\n        })\n        policy.FX_SPREAD_PCT.update({\n            \"basic\": 1.0,\n            \"premium\": 0.5,\n        })\n        policy.TRANSFER_FEES.update({\n            \"standard\": (1.0, 0.5),\n            \"express\": (5.0, 1.0),\n        })\n\n    def tearDown(self):\n        # Restore original policy values\n        policy.RATES_TO_EUR.clear()\n        policy.RATES_TO_EUR.update(self.original_rates)\n        policy.TIERS[:] = self.original_tiers\n        policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.clear()\n        policy.FX_FREE_MONTHLY_ALLOWANCE_EUR.update(self.original_allowance)\n        policy.FX_SPREAD_PCT.clear()\n        policy.FX_SPREAD_PCT.update(self.original_spread_pct)\n        policy.TRANSFER_FEES.clear()\n        policy.TRANSFER_FEES.update(self.original_transfer_fees)\n\n    def test_mid_rate_known_currencies(self):\n        rate = fx.mid_rate(\"USD\", \"EUR\")\n        expected = policy.RATES_TO_EUR[\"USD\"] / policy.RATES_TO_EUR[\"EUR\"]\n        self.assertAlmostEqual(rate, expected)\n\n        rate = fx.mid_rate(\"GBP\", \"JPY\")\n        expected = policy.RATES_TO_EUR[\"GBP\"] / policy.RATES_TO_EUR[\"JPY\"]\n        self.assertAlmostEqual(rate, expected)\n\n    def test_mid_rate_unknown_currency_raises(self):\n        with self.assertRaises(ValueError):\n            fx.mid_rate(\"XYZ\", \"EUR\")\n        with self.assertRaises(ValueError):\n            fx.mid_rate(\"USD\", \"ABC\")\n\n    def test_quote_basic_within_allowance(self):\n        amount = 100.0\n        tier = \"basic\"\n        from_currency = \"USD\"\n        to_currency = \"EUR\"\n        allowance_used = 0.0\n        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used)\n        self.assertEqual(quote.tier, tier)\n        self.assertTrue(quote.allowance_applied)\n        self.assertEqual(quote.spread_pct, 0.0)\n        self.assertAlmostEqual(quote.gross_amount, amount * fx.mid_rate(from_currency, to_currency))\n        self.assertAlmostEqual(quote.final_amount, quote.gross_amount)\n\n    def test_quote_basic_exceeds_allowance_default_spread(self):\n        amount = 2000.0\n        tier = \"basic\"\n        from_currency = \"USD\"\n        to_currency = \"EUR\"\n        allowance_used = 900.0  # so 900 + amount_eur > 1000 allowance\n        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used)\n        self.assertFalse(quote.allowance_applied)\n        self.assertEqual(quote.spread_pct, policy.FX_SPREAD_PCT[tier])\n        self.assertGreater(quote.spread_amount, 0)\n        self.assertAlmostEqual(quote.final_amount, quote.gross_amount - quote.spread_amount)\n\n    def test_quote_basic_exceeds_allowance_override_spread(self):\n        amount = 2000.0\n        tier = \"basic\"\n        from_currency = \"USD\"\n        to_currency = \"EUR\"\n        allowance_used = 900.0\n        spread_override = 2.5\n        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used,\n                         spread_pct_override=spread_override)\n        self.assertFalse(quote.allowance_applied)\n        self.assertEqual(quote.spread_pct, spread_override)\n\n    def test_quote_partial_allowance_applied(self):\n        amount = 2000.0\n        tier = \"basic\"\n        from_currency = \"USD\"\n        to_currency = \"EUR\"\n        # Use partial allowance: allowance used + amount_eur > total, partial_allowance=True\n        allowance_used = 900.0\n        quote = fx.quote(amount, from_currency, to_currency, tier, allowance_used,\n                         partial_allowance=True)\n        self.assertFalse(quote.allowance_applied)\n        self.assertGreater(quote.spread_amount, 0)\n        # spread_amount should be less than full spread because part of allowance applies\n        full_spread_amount = quote.gross_amount * policy.FX_SPREAD_PCT[tier] / 100.0\n        self.assertLess(quote.spread_amount, full_spread_amount)\n\n    def test_quote_invalid_tier_raises(self):\n        with self.assertRaises(ValueError):\n            fx.quote(100, \"USD\", \"EUR\", \"unknown_tier\")\n\n    def test_quote_as_dict_rounding(self):\n        amount = 123.456789123\n        tier = \"basic\"\n        from_currency = \"USD\"\n        to_currency = \"EUR\"\n        q = fx.quote(amount, from_currency, to_currency, tier)\n        d = q.as_dict()\n        self.assertIsInstance(d, dict)\n        # All float values should be rounded to 6 decimals\n        for k, v in d.items():\n            if isinstance(v, float):\n                self.assertEqual(round(v, 6), v)\n\n    def test_transfer_fee_known_type(self):\n        amount_eur = 1000.0\n        transfer_type = \"standard\"\n        fee_info = fx.transfer_fee(amount_eur, transfer_type)\n        self.assertEqual(fee_info[\"transfer_type\"], transfer_type)\n        flat, pct = policy.TRANSFER_FEES[transfer_type]\n        expected_fee = flat + amount_eur * pct / 100.0\n        self.assertAlmostEqual(fee_info[\"total_fee_eur\"], round(expected_fee, 2))\n        self.assertEqual(fee_info[\"flat_fee_eur\"], flat)\n        self.assertEqual(fee_info[\"percent_fee\"], pct)\n\n    def test_transfer_fee_unknown_type_raises(self):\n        with self.assertRaises(ValueError):\n            fx.transfer_fee(100.0, \"unknown_type\")"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "in_memory",
+  "reasoning": {
+    "context": null,
+    "effort": null,
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": false,
+  "temperature": 0.7,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 819,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cache_write_tokens_details": {
+        "ttl_12h_tokens": 0,
+        "ttl_30m_tokens": 0
+      },
+      "cached_tokens": 0
+    },
+    "output_tokens": 1444,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 2263
+  },
+  "user": null,
+  "metadata": {}
+}
