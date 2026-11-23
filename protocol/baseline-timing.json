@@ -1,0 +1,20 @@
+{
+  "experiment": "HW10 resit after mentor feedback of 2026-11-23",
+  "status": "not_started",
+  "timezone": "Europe/Warsaw",
+  "baseline_file": "tests/manual/test_fx_manual.py",
+  "start_utc": null,
+  "start_local": null,
+  "end_utc": null,
+  "end_local": null,
+  "elapsed_seconds": null,
+  "elapsed_minutes": null,
+  "events": [],
+  "pauses": [],
+  "author_confirmed_no_pauses": null,
+  "baseline_commit": null,
+  "authoring_method": "pending actual independent author input; assistant only prepares the environment",
+  "prior_exposure_to_old_experiment": true,
+  "old_code_or_timing_reused": false,
+  "generated_calls_in_this_resit": 0
+}
